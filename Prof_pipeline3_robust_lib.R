@@ -104,11 +104,11 @@ RobSpaReg<- function(formula,data, nit=20,nc=2,rlr_method="ltsReg", Cdn=xy, lamb
       if (showPlot==T){
         ccol = rep(1, nobs); ccol[outliers] = 2; plot(data, col=ccol,pch=16) #debug
       }
-      fres = flexmix_2(formula,data1=data[inds_in,],k=nc,mprior=0.1)            # mix_reg. Output: posterior, logLik, 
+      # fres = flexmix_2(formula,data1=data[inds_in,],k=nc,mprior=0.1)            # mix_reg. Output: posterior, logLik, 
       # fres@cluster
       SpaRes = SpatialRegKmeans(dat=data[inds_in,], ncl=nc, iter.max = 100L, epsilon=1e-4, Cdn=xy[inds_in,], verbose=F, lambda=lamb, showPlot=F)
       # SpaRes$clusterMem
-      nc_tmp=fres@k
+      # nc_tmp=fres@k
       # www = posterior(fres, newdata=data, unscale=TRUE)
       www = calPosterior(SpaRes, newdata=data, newCdn=Cdn, ncl=nc, lambda=lamb)
       if(ccc>10  ){flag=1}
@@ -117,15 +117,16 @@ RobSpaReg<- function(formula,data, nit=20,nc=2,rlr_method="ltsReg", Cdn=xy, lamb
           flag=1;
         }
       }
-    } #end flag
+    } #end-while_flag
     #print(sort(unique(outliers)))
-    if(fres@k == nc & ccc<11){
+    #if(fres@k == nc & ccc<11){
+    if(ncol(SpaRes$centroid) == nc & ccc<11){
       # res_list[[jj]]=fres # mix_reg result. 
       res_list[[jj]]=SpaRes
       ooo_list[[jj]]=sort(unique(outliers))
     }
     #print(paste("The number of iteraction is", ccc))
-  } #end jj
+  } #end-jj
   ooo_list=ooo_list[][which(sapply(res_list, length)>0)]
   res_list=res_list[][which(sapply(res_list, length)>0)]
   #llik=sapply(res_list, function(x)x@logLik)
