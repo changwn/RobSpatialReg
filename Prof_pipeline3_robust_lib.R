@@ -99,6 +99,7 @@ RobSpaReg<- function(formula,data, nit=20,nc=2,rlr_method="ltsReg", Cdn=xy, lamb
           #outlier_list[[j]] = unique(c(oo1,oo2))##c
         }
       } #end-for_nc
+      # print(outlier_list)
       outliers=Reduce(c,outlier_list)
       if(length(outliers)>0){inds_in=c(1:nobs)[-outliers]}
       if (showPlot==T){
@@ -106,24 +107,43 @@ RobSpaReg<- function(formula,data, nit=20,nc=2,rlr_method="ltsReg", Cdn=xy, lamb
       }
       # fres = flexmix_2(formula,data1=data[inds_in,],k=nc,mprior=0.1)            # mix_reg. Output: posterior, logLik, 
       # fres@cluster
-      SpaRes = SpatialRegKmeans(dat=data[inds_in,], ncl=nc, iter.max = 100L, epsilon=1e-4, Cdn=xy[inds_in,], verbose=F, lambda=lamb, showPlot=F)
+      SpaRes = SpatialRegKmeans(dat=data[inds_in,], ncl=nc, iter.max = 100L, epsilon=1e-4, Cdn_f=Cdn[inds_in,], verbose=F, lambda=lamb, showPlot=F, rob=T, inside=inds_in)
+      # SpaRes.only = SpatialRegKmeans(dat=data[inds_in,], ncl=nc, iter.max = 100L, epsilon=1e-4, Cdn=xy[inds_in,], verbose=F, lambda=0, showPlot=F)
       # SpaRes$clusterMem
+      # print(rbind(inds_in, SpaRes$clusterMem))
+      # ### backup step for catching spatial outliers.
+      # print(rbind(inds_in, SpaRes$clusterMem, SpaRes.only$clusterMem))
+      # spa.outlier = xxx(rbind(SpaRes$clusterMem, SpaRes.only$clusterMem))
+      if (showPlot==T){
+        # print(SpaRes$outlier_spa)
+        # ccol = rep(1, nobs); ccol[outliers] = 2; ccol[SpaRes$outlier_spa]=3; plot(data, col=ccol,pch=16) #debug
+      }
+      # print(outliers)
+      # print(SpaRes$outlier_spa)
+      outliers = unique(sort(c(outliers, SpaRes$outlier_spa)))
+      # print(outliers)
+      # print('-----------')
+
       # nc_tmp=fres@k
       # www = posterior(fres, newdata=data, unscale=TRUE)
       www = calPosterior(SpaRes, newdata=data, newCdn=Cdn, ncl=nc, lambda=lamb)
+      # pwww = t(www); colnames(pwww) = c(1:ncol(pwww)) ; barplot(pwww, beside=TRUE, col=c("lightblue","red"),cex.names=0.5, main='www: posterior')
       if(ccc>10  ){flag=1}
       if(length(outliers)==length(outliers.old)& ccc>1){
         if(length(outliers)==sum(outliers==outliers.old)){
           flag=1;
         }
       }
-    } #end-while_flag
+    }#end-while_flag
     #print(sort(unique(outliers)))
     #if(fres@k == nc & ccc<11){
     if(ncol(SpaRes$centroid) == nc & ccc<11){
       # res_list[[jj]]=fres # mix_reg result. 
       res_list[[jj]]=SpaRes
       ooo_list[[jj]]=sort(unique(outliers))
+      #print(dim(SpaRes$hy_posterior))
+      # print(length(sort(unique(outliers))))
+      #print(length(sort(outliers)))
     }
     #print(paste("The number of iteraction is", ccc))
   } #end-jj
@@ -157,7 +177,7 @@ RobSpaReg<- function(formula,data, nit=20,nc=2,rlr_method="ltsReg", Cdn=xy, lamb
   result
 }
 
-calPosterior <- function(SpaRes, newdata=data, newCdn=Cdn, ncl=nc, lambda=1){
+calPosterior <- function(SpaRes, newdata=data, newCdn=xy, ncl=nc, lambda=1){
   mmm = matrix(0, nrow(data), ncl)
   y = newdata$y; x = newdata$x
   alpha = SpaRes$alpha
@@ -195,26 +215,26 @@ calPosterior <- function(SpaRes, newdata=data, newCdn=Cdn, ncl=nc, lambda=1){
 # Cdn: coordinate of data, which is a n by 2 matrix, n is number of observations.
 # verbose: if ture, will print iteration result.
 # lambda: hyperparameter of hybridzation, which is to balance regression-based probability and spatial-based probability.
-SpatialRegKmeans <- function(dat, ncl, iter.max = 100L, epsilon=1e-4, Cdn=NULL, verbose=T, lambda=1, showPlot=F)
+SpatialRegKmeans <- function(dat, ncl, iter.max = 100L, epsilon=1e-4, Cdn_f=NULL, verbose=T, lambda=1, showPlot=F, rob=F, inside)
 {
   
   n_sample = nrow(dat) ; 
   y = dat[,2]; x = dat[,1] #order is important: 1st column is x, 2nd column is y.
   
-  if(ncol(Cdn) != 2) stop('The coordinate should be 2-dim.')
+  if(ncol(Cdn_f) != 2) stop('The coordinate should be 2-dim.')
   #clusterMem = rep(1, n_sample) # give random cluster
   #clusterMem = sapply(clusterMem, function(x){sample(1:ncl, 1, replace = T)})
   # d_mat <- as.dist(W)
   # hclust.res <- hclust(d_mat, method = "complete" )
   # clusterMem <- cutree(hclust.res, k=ncl) # cut tree into 5 clusters
-  kmeans.res <- kmeans(Cdn, ncl)
+  kmeans.res <- kmeans(Cdn_f, ncl)
   clusterMem <- kmeans.res$cluster
   km.center <- kmeans.res$centers
   if(verbose==T) {print('Init random cluster membership.'); print(table(clusterMem))}
   
   if(showPlot==T) plot(dat, col=clusterMem, main='Random Init') 
   # hist(W, main='Dist of distance matrix')
-  if(showPlot==T) plot(Cdn, main='Coordinate')
+  if(showPlot==T) plot(Cdn_f, main='Coordinate')
   
   
   loss = Inf
@@ -224,6 +244,7 @@ SpatialRegKmeans <- function(dat, ncl, iter.max = 100L, epsilon=1e-4, Cdn=NULL, 
   count = 0
   beta = matrix(0, 1, ncl)
   alpha = matrix(0, 1, ncl)
+  spa_outlier = list()
   # while(loss > epsilon | count < iter.max){
   while(count < iter.max){
     loss = 0
@@ -236,7 +257,7 @@ SpatialRegKmeans <- function(dat, ncl, iter.max = 100L, epsilon=1e-4, Cdn=NULL, 
     }
     
     for(k in 1:ncl){ #update spatial center
-      km.center[k, ] = apply(Cdn[clusterMem==k,], 2, mean)
+      km.center[k, ] = apply(Cdn_f[clusterMem==k,], 2, mean)
     }
     
     # update B_k
@@ -300,13 +321,17 @@ SpatialRegKmeans <- function(dat, ncl, iter.max = 100L, epsilon=1e-4, Cdn=NULL, 
     # clusterMem = apply((Y - A - X)^2, 1, which.min) #residual
     resi = abs(Y - A - X)
     resi_scale = 1 - resi / rowSums(resi) #sum is zero?
+    clust_resi = apply(resi_scale, 1, which.max)
     
     D = matrix(0, length(y), ncl)
     for(k in 1:ncl){
       center.tmp = km.center[k,]
-      D[, k] = apply(Cdn, 1, function(x){norm(matrix(x - center.tmp, nrow=1), 'f')})
+      D[, k] = apply(Cdn_f, 1, function(x){norm(matrix(x - center.tmp, nrow=1), 'f')})
     }
     D_scale = 1 - D / rowSums(D)
+    cluster_spa = apply(D_scale, 1, which.max)
+    # print(rbind(inds_in, clust_resi, cluster_spa))
+    spa_outlier[[length(spa_outlier)+1]] = which(clust_resi != cluster_spa)
     
     # hybrid: Ci = p(Ci | xi, beta) + lambda * p(Ci | xi, center)
     p_hybrid = resi_scale + lambda * D_scale
@@ -332,7 +357,10 @@ SpatialRegKmeans <- function(dat, ncl, iter.max = 100L, epsilon=1e-4, Cdn=NULL, 
     
   } #end-while
   clusterMem_rt = clusterMem_good
+  spa_outlier_c = Reduce(intersect, spa_outlier)
+  spa_outlier_trans = inside[spa_outlier_c]
   
-  
-  return(list(clusterMem=clusterMem_rt, loss=loss_small, beta=beta, alpha=alpha, centroid=km.center, hy_posterior=p_hybrid))
+  # return(list(clusterMem=clusterMem_rt, loss=loss_small, beta=beta, alpha=alpha, centroid=km.center, hy_posterior=p_hybrid, outlier_spa=spa_outlier_c))
+  return(list(clusterMem=clusterMem_rt[-spa_outlier_c], loss=loss_small, beta=beta, alpha=alpha, centroid=km.center, 
+              hy_posterior=p_hybrid[-spa_outlier_c,], outlier_spa=spa_outlier_trans))
 }
