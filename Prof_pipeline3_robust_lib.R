@@ -41,6 +41,8 @@ simulateData_outlier <- function(n=c(40,40,20), beta=c(1.5,-1.5), coordinate=c(1
 
 
 
+
+
 RobSpaReg<- function(formula,data, nit=20,nc=2,rlr_method="ltsReg", Cdn=xy, lamb=5, showPlot=F){
   mycall = match.call();
   res_list=vector("list",nit)
@@ -137,7 +139,7 @@ RobSpaReg<- function(formula,data, nit=20,nc=2,rlr_method="ltsReg", Cdn=xy, lamb
     }#end-while_flag
     #print(sort(unique(outliers)))
     #if(fres@k == nc & ccc<11){
-    if(ncol(SpaRes$centroid) == nc & ccc<11){
+    if(nrow(SpaRes$centroid) == nc & ccc<11){
       # res_list[[jj]]=fres # mix_reg result. 
       res_list[[jj]]=SpaRes
       ooo_list[[jj]]=sort(unique(outliers))

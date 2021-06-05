@@ -1,5 +1,5 @@
 #-------------------------------------
-dat_simu1 = simulateData_outlier(n=c(40,40,20), beta=c(1.5,1.1), coordinate = c(1,1, -1,-1))
+dat_simu1 = simulateData_outlier(n=c(40,40,20), beta=c(1.5,1.0), coordinate = c(1,1, -1,-1))
 data = data.frame(dat_simu1$mat)
 xy = dat_simu1$xy
 cl = dat_simu1$cl
@@ -28,7 +28,7 @@ cl1 = dat_simu1$cl
 plot(data1, col=cl1, pch=16)
 plot(xy1, col=cl1, pch=16)
 
-# library(RobMixReg)
+library(RobMixReg)
 library(robustbase)
 
 #----------------------
