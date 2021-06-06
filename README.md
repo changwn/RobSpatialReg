@@ -21,7 +21,7 @@ RobSpa.res@indout
 RobSpa.res@ctleclusters[1:40]
 RobSpa.res@ctleclusters[41:80]
 RobSpa.res@ctleclusters[81:100]
-cl[1:40]
-cl[41:80]
-cl[81:100]
+cl1[1:40]
+cl1[41:80]
+cl1[81:100]
 ```
