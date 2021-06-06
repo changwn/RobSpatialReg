@@ -2,6 +2,9 @@
 Robust Spatial Mixture Regression
 
 ```
+# load function of algorithm
+source('Prof_pipeline3_robust_lib.R')
+
 dat_simu1 = simulateData_outlier(n=c(40,40,20), beta=c(1.5,1), coordinate = c(1,1, -1,-1))
 data1 = data.frame(dat_simu1$mat)
 xy1 = dat_simu1$xy
