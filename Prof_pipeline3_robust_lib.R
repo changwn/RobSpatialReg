@@ -181,7 +181,8 @@ RobSpaReg<- function(formula,data, nit=20,nc=2,rlr_method="ltsReg", Cdn=xy, lamb
 
 calPosterior <- function(SpaRes, newdata=data, newCdn=xy, ncl=nc, lambda=1){
   mmm = matrix(0, nrow(newdata), ncl)
-  y = newdata$y; x = newdata$x
+  #y = newdata$y; x = newdata$x
+  y = newdata[,1]; x = newdata[,2]  # assume 1st col is y, 2nd col is x.
   alpha = SpaRes$alpha
   beta = SpaRes$beta
   s.center = SpaRes$centroid
