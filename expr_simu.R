@@ -80,9 +80,26 @@ simu_bal = list(group_1, group_2, group_3)
 names(simu_bal) = c('40_40', '30_50', '20_60')
 
 
+#-----beta (coefficient)--------
+group_1 = list()
+group_2 = list()
+group_3 = list()
+for(i in 1:100){
+  dat_simu1 = simulateData_outlier_sig(n=c(40,40,20), beta=c(1.5,1.0), coordinate = c(1,1, -1,-1), sigma=0.05)
+  group_1[[i]] = dat_simu1
+  
+  dat_simu1 = simulateData_outlier_sig(n=c(40,40,20), beta=c(1.5,0.1), coordinate = c(1,1, -1,-1), sigma=0.05)
+  group_2[[i]] = dat_simu1
+  
+  dat_simu1 = simulateData_outlier_sig(n=c(40,40,20), beta=c(1.5,-1.2), coordinate = c(1,1, -1,-1), sigma=0.05)
+  group_3[[i]] = dat_simu1
+}
+simu_beta = list(group_1, group_2, group_3)
+names(simu_beta) = c('beta1', 'beta2', 'beta3')
+
 # library(RobMixReg)
 # library(robustbase)
-# dat_simu1 = simu_bal[[3]][[100]]
+# dat_simu1 = simu_beta[[3]][[100]]
 # data = data.frame(dat_simu1$mat)
 # xy = dat_simu1$xy
 # cl = dat_simu1$cl

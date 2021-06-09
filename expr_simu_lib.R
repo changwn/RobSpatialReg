@@ -261,3 +261,5 @@ simulateData_outlier_bal <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05
   
   return(list(mat=mat, xy=xy, cl=cl))
 }
+
+
