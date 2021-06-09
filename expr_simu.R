@@ -6,7 +6,8 @@ source('./expr_simu_lib')
 
 library(tictoc)
 
-simu_list = list() # outside wrapper
+simu_list = list() # outside wrapper -> Rdata
+set.seed(1234)
 
 #-----sigma level--------
 group_sig1 = list()
@@ -60,21 +61,45 @@ for(i in 1:100){
 simu_k = list(group_1, group_2, group_3)
 names(simu_k) = c('k=2', 'k=3', 'k=4')
 
-# dat_simu1 = simu_k[[3]][[100]]
+
+#----Balance-----
+group_1 = list()
+group_2 = list()
+group_3 = list()
+for(i in 1:100){
+  dat_simu1 = simulateData_outlier_bal(n=c(40,40,20), beta=c(1.5,1.0), coordinate = c(1,1, -1,-1), sigma=0.05)
+  group_1[[i]] = dat_simu1
+  
+  dat_simu1 = simulateData_outlier_bal(n=c(30,50,20), beta=c(1.5,1.0), coordinate = c(1,1, -1,-1), sigma=0.05)
+  group_2[[i]] = dat_simu1
+  
+  dat_simu1 = simulateData_outlier_bal(n=c(20,60,20), beta=c(1.5,1.0), coordinate = c(1,1, -1,-1), sigma=0.05)
+  group_3[[i]] = dat_simu1
+}
+simu_bal = list(group_1, group_2, group_3)
+names(simu_bal) = c('40_40', '30_50', '20_60')
+
+
+# library(RobMixReg)
+# library(robustbase)
+# dat_simu1 = simu_bal[[3]][[100]]
 # data = data.frame(dat_simu1$mat)
 # xy = dat_simu1$xy
 # cl = dat_simu1$cl
 # plot(data, col=cl, pch=16)
 # plot(xy, col=cl, pch=16)
 # tic()
-# RobSpa.res = RobSpaReg(formula = as.formula("y~x"), data, nit=20, nc=4, rlr_method="ltsReg", Cdn=xy, lamb=5)
+# RobSpa.res = RobSpaReg(formula = as.formula("y~x"), data, nit=20, nc=2, rlr_method="ltsReg", Cdn=xy, lamb=5)
 # toc()
 # RobSpa.res@inds_in
 # RobSpa.res@indout
 # RobSpa.res@ctleclusters[1:40]
 # RobSpa.res@ctleclusters[41:80]
-# RobSpa.res@ctleclusters[81:120]
-# RobSpa.res@ctleclusters[121:160]
+# RobSpa.res@ctleclusters[81:100]
+
+
+
+
 
 
 
