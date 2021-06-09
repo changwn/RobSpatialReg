@@ -41,8 +41,15 @@ simulateData_outlier <- function(n=c(40,40,20), beta=c(1.5,-1.5), coordinate=c(1
 
 
 
-
-
+#debug default parameter
+# formula= as.formula("y~x")
+# # data
+# nit=20
+# nc=2
+# rlr_method="ltsReg"
+# Cdn=xy
+# lamb=5
+# showPlot=F
 RobSpaReg<- function(formula,data, nit=20,nc=2,rlr_method="ltsReg", Cdn=xy, lamb=5, showPlot=F){
   mycall = match.call();
   res_list=vector("list",nit)
@@ -362,6 +369,11 @@ SpatialRegKmeans <- function(dat, ncl, iter.max = 100L, epsilon=1e-4, Cdn_f=NULL
   clusterMem_rt = clusterMem_good
   spa_outlier_c = Reduce(intersect, spa_outlier)
   spa_outlier_trans = inside[spa_outlier_c]
+  
+  if(length(spa_outlier_c) == 0){ #perfect situation
+    return(list(clusterMem=clusterMem_rt, loss=loss_small, beta=beta, alpha=alpha, centroid=km.center, 
+                hy_posterior=p_hybrid, outlier_spa=NULL))
+  }
   
   # return(list(clusterMem=clusterMem_rt, loss=loss_small, beta=beta, alpha=alpha, centroid=km.center, hy_posterior=p_hybrid, outlier_spa=spa_outlier_c))
   return(list(clusterMem=clusterMem_rt[-spa_outlier_c], loss=loss_small, beta=beta, alpha=alpha, centroid=km.center, 
