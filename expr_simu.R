@@ -6,7 +6,7 @@ source('./expr_simu_lib')
 
 library(tictoc)
 
-simu_list = list() # outside wrapper -> Rdata
+# simu_list = list() # outside wrapper -> Rdata
 set.seed(1234)
 
 #-----sigma level--------
@@ -123,9 +123,32 @@ for(i in 1:100){
 simu_spaOut = list(group_1, group_2)
 names(simu_spaOut) = c('10%', '20%')
 
-# library(RobMixReg)
-# library(robustbase)
-dat_simu1 = simu_spaOut[[2]][[100]]
+#-----shape-square--------only 2 group
+group_1 = list()
+group_2 = list()
+for(i in 1:100){
+  dat_simu1 = simulateData_outlier_shape(sh='gaus') 
+  group_1[[i]] = dat_simu1
+  
+  dat_simu1 = simulateData_outlier_shape(sh='unif') 
+  group_2[[i]] = dat_simu1
+}
+simu_shape = list(group_1, group_2)
+names(simu_shape) = c('gaus', 'unif')
+
+#----------------------------------------------------------
+# outside wrapper -> Rdata
+# simu_listAndList = list(simu_sig, simu_n, simu_k, simu_bal, simu_beta,
+#                           simu_regOut, simu_spaOut,
+#                           simu_shape, simu_spaDist, simu_spaDensity) 
+# names(simu_listAndList) = c()
+# getwd()
+# save(simu_listAndList, file='simu_ListInList.RData')
+#----------------------------------------------------------
+
+# # library(RobMixReg)
+# # library(robustbase)
+dat_simu1 = simu_shape[[2]][[99]]
 data = data.frame(dat_simu1$mat)
 xy = dat_simu1$xy
 cl = dat_simu1$cl
@@ -139,9 +162,6 @@ RobSpa.res@indout
 RobSpa.res@ctleclusters[1:40]
 RobSpa.res@ctleclusters[41:80]
 RobSpa.res@ctleclusters[81:100]
-
-
-
 
 
 

@@ -23,7 +23,7 @@ simulateData_outlier_sig <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05
   ccc.n2 = rbind(ccc2[1:35,], ccc[36:40,])
   xy = rbind(ccc.n1, ccc.n2,ccc.o1, ccc.o2)
   
-  return(list(mat=mat, xy=xy, cl=cl))
+  return(list(mat=mat, xy=xy, cl=cl, beta=beta))
 }
 
 
@@ -56,7 +56,7 @@ simulateData_outlier_n <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05,
   ccc.n2 = rbind(ccc2[loca.in,], ccc[loca.out,])
   xy = rbind(ccc.n1, ccc.n2,ccc.o1, ccc.o2)
   
-  return(list(mat=mat, xy=xy, cl=cl))
+  return(list(mat=mat, xy=xy, cl=cl, beta=beta))
 }
 
 
@@ -182,7 +182,7 @@ simulateData_outlier_k <- function(k = 2)
   }
   
   
-  return(list(mat=mat, xy=xy, cl=cl))
+  return(list(mat=mat, xy=xy, cl=cl, beta=beta))
 }
 
 
@@ -259,7 +259,7 @@ simulateData_outlier_bal <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05
     xy = rbind(ccc.n1, ccc.n2,ccc.o1, ccc.o2)
   }
   
-  return(list(mat=mat, xy=xy, cl=cl))
+  return(list(mat=mat, xy=xy, cl=cl, beta=beta))
 }
 
 simulateData_outlier_regOut <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05, 
@@ -312,7 +312,7 @@ simulateData_outlier_regOut <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0
     xy = rbind(ccc.n1, ccc.n2,ccc.o1, ccc.o2)
   }
   
-  return(list(mat=mat, xy=xy, cl=cl))
+  return(list(mat=mat, xy=xy, cl=cl, beta=beta))
 }
 
 simulateData_outlier_spaOut <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05, 
@@ -365,7 +365,123 @@ simulateData_outlier_spaOut <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0
     xy = rbind(ccc.n1, ccc.n2,ccc.o1, ccc.o2)
   }
   
-  return(list(mat=mat, xy=xy, cl=cl))
+  return(list(mat=mat, xy=xy, cl=cl, beta=beta))
+}
+
+simulateData_outlier_shape <- function(sh='circle', n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05, 
+                                     coordinate=c(1,1,-1,-1) 
+)
+{
+  if(sh == 'circle'){
+    cl = c(rep(1,35), rep(4, 5), 
+           rep(2,35), rep(5, 5), 
+           rep(3, 20))
+    
+    mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
+    colnames(mat) = c('y','x')
+    loca1 = 1:40;  loca2 = 41:80;  loca3 = 81:100
+    mat[loca1,1] = beta[1] * mat[loca1,2] + rnorm(40,0,sigma)
+    mat[loca2,1] = beta[2] * mat[loca2,2] + rnorm(40,0,sigma)
+    mat[loca3,1] = simu_outlier(mat[loca3, 2], beta, distOut=2)
+    mat = mat[,2:1] #change order
+    
+    # spatial coordinate
+    ccc = mvrnorm(n[1], mu = c(coordinate[1],coordinate[2]), Sigma=diag(0.1, 2,2))
+    ccc2 = mvrnorm(n[2], mu = c(coordinate[3],coordinate[4]), Sigma=diag(0.1, 2,2))
+    ccc.o1 = mvrnorm(n[3]/2, mu = c(coordinate[1],coordinate[2]), Sigma=diag(0.1, 2,2))
+    ccc.o2 = mvrnorm(n[3]/2, mu = c(coordinate[3],coordinate[4]), Sigma=diag(0.1, 2,2))
+    ccc.n1 = rbind(ccc[1:35,], ccc2[36:40,])
+    ccc.n2 = rbind(ccc2[1:35,], ccc[36:40,])
+    xy = rbind(ccc.n1, ccc.n2,ccc.o1, ccc.o2)
+  }
+  
+  ccc = mvrnorm(n[1], mu = c(coordinate[1],coordinate[2]), Sigma=diag(0.1, 2,2))
+  ccc2 = mvrnorm(n[2], mu = c(coordinate[3],coordinate[4]), Sigma=diag(0.5, 2,2))
+  xy = rbind(ccc,ccc2)
+  plot(xy)
+  
+  return(list(mat=mat, xy=xy, cl=cl, beta=beta))
 }
 
 
+library('NonNorMvtDist')
+simulateData_outlier_shape <- function(sh='gaus', n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05, 
+                                       coordinate=c(1,1,-1,-1) 
+)
+{
+  if(sh == 'gaus'){
+    cl = c(rep(1,35), rep(4, 5), 
+           rep(2,35), rep(5, 5), 
+           rep(3, 20))
+    
+    mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
+    colnames(mat) = c('y','x')
+    loca1 = 1:40;  loca2 = 41:80;  loca3 = 81:100
+    mat[loca1,1] = beta[1] * mat[loca1,2] + rnorm(40,0,sigma)
+    mat[loca2,1] = beta[2] * mat[loca2,2] + rnorm(40,0,sigma)
+    mat[loca3,1] = simu_outlier(mat[loca3, 2], beta, distOut=2)
+    mat = mat[,2:1] #change order
+    
+    # spatial coordinate
+    ccc = mvrnorm(n[1], mu = c(coordinate[1],coordinate[2]), Sigma=diag(0.1, 2,2))
+    ccc2 = mvrnorm(n[2], mu = c(coordinate[3],coordinate[4]), Sigma=diag(0.1, 2,2))
+    ccc.o1 = mvrnorm(n[3]/2, mu = c(coordinate[1],coordinate[2]), Sigma=diag(0.1, 2,2))
+    ccc.o2 = mvrnorm(n[3]/2, mu = c(coordinate[3],coordinate[4]), Sigma=diag(0.1, 2,2))
+    ccc.n1 = rbind(ccc[1:35,], ccc2[36:40,])
+    ccc.n2 = rbind(ccc2[1:35,], ccc[36:40,])
+    xy = rbind(ccc.n1, ccc.n2,ccc.o1, ccc.o2)
+  }
+  
+  #------------------------
+  # library('NonNorMvtDist') #example
+  # tmp = rmvunif(n = 50, parm = 2, dim = 2)
+  # tmp[,1] = tmp[,1] + 0.5
+  # tmp[,2] = tmp[,2] + 0.5
+  # plot(tmp)
+  # 
+  # tmp2 = rmvunif(n = 50, parm = 2, dim = 2)
+  # tmp2[,1] = tmp2[,1] - 0.5
+  # tmp2[,2] = tmp2[,2] - 0.5
+  # plot(tmp2)
+  # 
+  # tmp_c = rbind(tmp,tmp2)
+  # plot(tmp_c)
+  mvruni1 <- function(n){
+    tmp = rmvunif(n, parm = 2, dim = 2)
+    tmp[,1] = tmp[,1] + 0.5
+    tmp[,2] = tmp[,2] + 0.5
+    return(tmp)
+  }
+  mvruni2 <- function(n){
+    tmp = rmvunif(n, parm = 2, dim = 2)
+    tmp[,1] = tmp[,1] - 0.5
+    tmp[,2] = tmp[,2] - 0.5
+    return(tmp)
+  }
+  
+  #------------------------
+  if(sh == 'unif'){
+    cl = c(rep(1,35), rep(4, 5), 
+           rep(2,35), rep(5, 5), 
+           rep(3, 20))
+    
+    mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
+    colnames(mat) = c('y','x')
+    loca1 = 1:40;  loca2 = 41:80;  loca3 = 81:100
+    mat[loca1,1] = beta[1] * mat[loca1,2] + rnorm(40,0,sigma)
+    mat[loca2,1] = beta[2] * mat[loca2,2] + rnorm(40,0,sigma)
+    mat[loca3,1] = simu_outlier(mat[loca3, 2], beta, distOut=2)
+    mat = mat[,2:1] #change order
+    
+    # spatial coordinate
+    ccc = mvruni1(n=40)
+    ccc2 = mvruni2(n=40)
+    ccc.o1 = mvruni1(n=10)
+    ccc.o2 = mvruni2(n=10)
+    ccc.n1 = rbind(ccc[1:35,], ccc2[36:40,])
+    ccc.n2 = rbind(ccc2[1:35,], ccc[36:40,])
+    xy = rbind(ccc.n1, ccc.n2,ccc.o1, ccc.o2)
+  }
+
+  return(list(mat=mat, xy=xy, cl=cl, beta=beta))
+}
