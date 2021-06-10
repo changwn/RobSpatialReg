@@ -179,7 +179,7 @@ setwd('C:/Users/wnchang/Documents/F/PhD_Research/2020_12_02_spatial/spatial_regr
 save(simu_listAndList, file='simu_ListInList.RData')
 #----------------------------------------------------------
 
-
+#### test code
 # # library(RobMixReg)
 # # library(robustbase)
 # dat_simu1 = simu_spaBal[[2]][[99]]
