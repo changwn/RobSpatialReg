@@ -179,6 +179,17 @@ setwd('C:/Users/wnchang/Documents/F/PhD_Research/2020_12_02_spatial/spatial_regr
 save(simu_listAndList, file='simu_ListInList.RData')
 #----------------------------------------------------------
 
+class(simu_listAndList)
+names(simu_listAndList)
+
+class(simu_listAndList[[1]])
+
+names(simu_listAndList[[1]])
+names(simu_listAndList[[2]])
+names(simu_listAndList[[3]])
+names(simu_listAndList[[4]])
+names(simu_listAndList[[10]])
+
 #### test code
 # # library(RobMixReg)
 # # library(robustbase)
