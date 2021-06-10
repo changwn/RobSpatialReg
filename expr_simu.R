@@ -104,7 +104,7 @@ for(i in 1:100){
   dat_simu1 = simulateData_outlier_regOut(n=c(40,40,20), beta=c(1.5,1.0), coordinate = c(1,1, -1,-1), sigma=0.05) #20%
   group_1[[i]] = dat_simu1
   
-  dat_simu1 = simulateData_outlier_regOut(n=c(45,45,10), beta=c(1.5,0.1), coordinate = c(1,1, -1,-1), sigma=0.05) #10%
+  dat_simu1 = simulateData_outlier_regOut(n=c(45,45,10), beta=c(1.5,1.0), coordinate = c(1,1, -1,-1), sigma=0.05) #10%
   group_2[[i]] = dat_simu1
 }
 simu_regOut = list(group_1, group_2)
@@ -136,32 +136,66 @@ for(i in 1:100){
 simu_shape = list(group_1, group_2)
 names(simu_shape) = c('gaus', 'unif')
 
+#-----spa-center-location--------only 2 group
+group_1 = list()
+group_2 = list()
+for(i in 1:100){
+  dat_simu1 = simulateData_outlier_sig(n=c(40,40,20), beta=c(1.5,1.0), coordinate = c(1,1, -1,-1), sigma=0.05)
+  group_1[[i]] = dat_simu1
+  
+  dat_simu1 = simulateData_outlier_sig(n=c(40,40,20), beta=c(1.5,1.0), coordinate = c(0.5,0, -0.5,0), sigma=0.05)
+  group_2[[i]] = dat_simu1
+
+}
+simu_spaLoca = list(group_1, group_2)
+names(simu_spaLoca) = c('diagnal', 'sideBySide')
+
+#-----spa-bal--------only 2 group
+group_1 = list()
+group_2 = list()
+for(i in 1:100){
+  dat_simu1 = simulateData_outlier_spaRadius(n=c(40,40,20), beta=c(1.5,1.0), coordinate = c(1,1, -1,-1), sigma=0.05, rad=c(0.1,0.1))
+  group_1[[i]] = dat_simu1
+  
+  dat_simu1 = simulateData_outlier_spaRadius(n=c(40,40,20), beta=c(1.5,1.0), coordinate = c(1,1, -1,-1), sigma=0.05, rad=c(0.1,0.5))
+  group_2[[i]] = dat_simu1
+  
+}
+simu_spaBal = list(group_1, group_2)
+names(simu_spaBal) = c('bal', 'imbal')
+
+
+
 #----------------------------------------------------------
-# outside wrapper -> Rdata
-# simu_listAndList = list(simu_sig, simu_n, simu_k, simu_bal, simu_beta,
-#                           simu_regOut, simu_spaOut,
-#                           simu_shape, simu_spaDist, simu_spaDensity) 
-# names(simu_listAndList) = c()
-# getwd()
-# save(simu_listAndList, file='simu_ListInList.RData')
+#### outside wrapper -> Rdata
+simu_listAndList = list(simu_sig, simu_n, simu_k, simu_bal, simu_beta,
+                          simu_regOut, simu_spaOut,
+                          simu_shape, simu_spaLoca, simu_spaBal)
+names(simu_listAndList) = c('simu_sig', 'simu_n', 'simu_k', 'simu_bal', 'simu_beta',
+                            'simu_regOut', 'simu_spaOut',
+                            'simu_shape', 'simu_spaLoca', 'simu_spaBal')
+getwd()
+setwd('C:/Users/wnchang/Documents/F/PhD_Research/2020_12_02_spatial/spatial_regression/expr_dataset')
+save(simu_listAndList, file='simu_ListInList.RData')
 #----------------------------------------------------------
+
 
 # # library(RobMixReg)
 # # library(robustbase)
-dat_simu1 = simu_shape[[2]][[99]]
-data = data.frame(dat_simu1$mat)
-xy = dat_simu1$xy
-cl = dat_simu1$cl
-plot(data, col=cl, pch=16)
-plot(xy, col=cl, pch=16)
-tic()
-RobSpa.res = RobSpaReg(formula = as.formula("y~x"), data, nit=20, nc=2, rlr_method="ltsReg", Cdn=xy, lamb=5)
-toc()
-RobSpa.res@inds_in
-RobSpa.res@indout
-RobSpa.res@ctleclusters[1:40]
-RobSpa.res@ctleclusters[41:80]
-RobSpa.res@ctleclusters[81:100]
+# dat_simu1 = simu_spaBal[[2]][[99]]
+# data = data.frame(dat_simu1$mat)
+# xy = dat_simu1$xy
+# cl = dat_simu1$cl
+# plot(data, col=cl, pch=16)
+# plot(xy, col=cl, pch=16)
+# tic()
+# RobSpa.res = RobSpaReg(formula = as.formula("y~x"), data, nit=20, nc=2, rlr_method="ltsReg", Cdn=xy, lamb=5)
+# toc()
+# RobSpa.res@inds_in
+# RobSpa.res@indout
+# RobSpa.res@ctleclusters[1:40]
+# RobSpa.res@ctleclusters[41:80]
+# RobSpa.res@ctleclusters[81:100]
 
 
 
