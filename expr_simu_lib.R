@@ -5,6 +5,9 @@ simulateData_outlier_sig <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05
   cl = c(rep(1,35), rep(4, 5), 
          rep(2,35), rep(5, 5), 
          rep(3, 20))
+  cl_new = c(rep(1,35), rep(-1, 5), 
+             rep(2,35), rep(-2, 5), 
+             rep(-3, 20))
   
   mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
   colnames(mat) = c('y','x')
@@ -23,7 +26,7 @@ simulateData_outlier_sig <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05
   ccc.n2 = rbind(ccc2[1:35,], ccc[36:40,])
   xy = rbind(ccc.n1, ccc.n2,ccc.o1, ccc.o2)
   
-  return(list(mat=mat, xy=xy, cl=cl, beta=beta))
+  return(list(mat=mat, xy=xy, cl=cl, cl_new=cl_new, beta=beta))
 }
 
 
@@ -35,6 +38,9 @@ simulateData_outlier_n <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05,
   cl = c(rep(1,N*0.35), rep(4, N*0.05), 
          rep(2,N*0.35), rep(5, N*0.05), 
          rep(3, N* 0.2))
+  cl_new = c(rep(1,N*0.35), rep(-1, N*0.05), 
+             rep(2,N*0.35), rep(-2, N*0.05), 
+             rep(-3, N* 0.2))
   
   mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
   colnames(mat) = c('y','x')
@@ -56,7 +62,7 @@ simulateData_outlier_n <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05,
   ccc.n2 = rbind(ccc2[loca.in,], ccc[loca.out,])
   xy = rbind(ccc.n1, ccc.n2,ccc.o1, ccc.o2)
   
-  return(list(mat=mat, xy=xy, cl=cl, beta=beta))
+  return(list(mat=mat, xy=xy, cl=cl, cl_new=cl_new, beta=beta))
 }
 
 
@@ -91,6 +97,10 @@ simulateData_outlier_k <- function(k = 2)
     cl = c(rep(1,35), rep(4, 5), 
            rep(2,35), rep(5, 5), 
            rep(3, 20))
+    cl_new = c(rep(1,35), rep(-1, 5), 
+               rep(2,35), rep(-2, 5), 
+               rep(-3, 20))
+    
     
     mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
     colnames(mat) = c('y','x')
@@ -120,6 +130,10 @@ simulateData_outlier_k <- function(k = 2)
            rep(2,35), rep(6, 5), 
            rep(3,35), rep(7, 5), 
            rep(4, 20))
+    cl_new = c(rep(1,35), rep(-5, 5), 
+           rep(2,35), rep(-6, 5), 
+           rep(3,35), rep(-7, 5), 
+           rep(-4, 20))
     
     mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
     colnames(mat) = c('y','x')
@@ -154,6 +168,11 @@ simulateData_outlier_k <- function(k = 2)
            rep(3,35), rep(8, 5), 
            rep(4,35), rep(9, 5), 
            rep(5, 20))
+    cl_new = c(rep(1,35), rep(-6, 5), 
+           rep(2,35), rep(-7, 5), 
+           rep(3,35), rep(-8, 5), 
+           rep(4,35), rep(-9, 5), 
+           rep(-5, 20))
     
     mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
     colnames(mat) = c('y','x')
@@ -182,7 +201,7 @@ simulateData_outlier_k <- function(k = 2)
   }
   
   
-  return(list(mat=mat, xy=xy, cl=cl, beta=beta))
+  return(list(mat=mat, xy=xy, cl=cl, cl_new=cl_new, beta=beta))
 }
 
 
@@ -194,6 +213,9 @@ simulateData_outlier_bal <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05
     cl = c(rep(1,35), rep(4, 5), 
            rep(2,35), rep(5, 5), 
            rep(3, 20))
+    cl_new = c(rep(1,35), rep(-4, 5), 
+           rep(2,35), rep(-5, 5), 
+           rep(-3, 20))
     
     mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
     colnames(mat) = c('y','x')
@@ -217,6 +239,9 @@ simulateData_outlier_bal <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05
     cl = c(rep(1,25), rep(4, 5), 
            rep(2,45), rep(5, 5), 
            rep(3, 20))
+    cl_new = c(rep(1,25), rep(-4, 5), 
+           rep(2,45), rep(-5, 5), 
+           rep(-3, 20))
     
     mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
     colnames(mat) = c('y','x')
@@ -240,6 +265,9 @@ simulateData_outlier_bal <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05
     cl = c(rep(1,15), rep(4, 5), 
            rep(2,55), rep(5, 5), 
            rep(3, 20))
+    cl_new = c(rep(1,15), rep(-4, 5), 
+               rep(2,55), rep(-5, 5), 
+               rep(-3, 20))
     
     mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
     colnames(mat) = c('y','x')
@@ -259,7 +287,7 @@ simulateData_outlier_bal <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05
     xy = rbind(ccc.n1, ccc.n2,ccc.o1, ccc.o2)
   }
   
-  return(list(mat=mat, xy=xy, cl=cl, beta=beta))
+  return(list(mat=mat, xy=xy, cl=cl, cl_new=cl_new, beta=beta))
 }
 
 simulateData_outlier_regOut <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05, 
@@ -270,6 +298,9 @@ simulateData_outlier_regOut <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0
     cl = c(rep(1,35), rep(4, 5), 
            rep(2,35), rep(5, 5), 
            rep(3, 20))
+    cl_new = c(rep(1,35), rep(-4, 5), 
+               rep(2,35), rep(-5, 5), 
+               rep(-3, 20))
     
     mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
     colnames(mat) = c('y','x')
@@ -293,6 +324,9 @@ simulateData_outlier_regOut <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0
     cl = c(rep(1,40), rep(4, 5), 
            rep(2,40), rep(5, 5), 
            rep(3, 10))
+    cl_new = c(rep(1,40), rep(-4, 5), 
+               rep(2,40), rep(-5, 5), 
+               rep(-3, 10))
     
     mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
     colnames(mat) = c('y','x')
@@ -312,7 +346,7 @@ simulateData_outlier_regOut <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0
     xy = rbind(ccc.n1, ccc.n2,ccc.o1, ccc.o2)
   }
   
-  return(list(mat=mat, xy=xy, cl=cl, beta=beta))
+  return(list(mat=mat, xy=xy, cl=cl, cl_new=cl_new, beta=beta))
 }
 
 simulateData_outlier_spaOut <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05, 
@@ -323,6 +357,9 @@ simulateData_outlier_spaOut <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0
     cl = c(rep(1,35), rep(4, 5), 
            rep(2,35), rep(5, 5), 
            rep(3, 20))
+    cl_new = c(rep(1,35), rep(-4, 5), 
+               rep(2,35), rep(-5, 5), 
+               rep(-3, 20))
     
     mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
     colnames(mat) = c('y','x')
@@ -346,6 +383,9 @@ simulateData_outlier_spaOut <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0
     cl = c(rep(1,30), rep(4, 10), 
            rep(2,30), rep(5, 10), 
            rep(3, 20))
+    cl_new = c(rep(1,30), rep(-4, 10), 
+               rep(2,30), rep(-5, 10), 
+               rep(-3, 20))
     
     mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
     colnames(mat) = c('y','x')
@@ -365,43 +405,44 @@ simulateData_outlier_spaOut <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigma=0
     xy = rbind(ccc.n1, ccc.n2,ccc.o1, ccc.o2)
   }
   
-  return(list(mat=mat, xy=xy, cl=cl, beta=beta))
+  return(list(mat=mat, xy=xy, cl=cl, cl_new=cl_new, beta=beta))
 }
 
-simulateData_outlier_shape <- function(sh='circle', n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05, 
-                                     coordinate=c(1,1,-1,-1) 
-)
-{
-  if(sh == 'circle'){
-    cl = c(rep(1,35), rep(4, 5), 
-           rep(2,35), rep(5, 5), 
-           rep(3, 20))
-    
-    mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
-    colnames(mat) = c('y','x')
-    loca1 = 1:40;  loca2 = 41:80;  loca3 = 81:100
-    mat[loca1,1] = beta[1] * mat[loca1,2] + rnorm(40,0,sigma)
-    mat[loca2,1] = beta[2] * mat[loca2,2] + rnorm(40,0,sigma)
-    mat[loca3,1] = simu_outlier(mat[loca3, 2], beta, distOut=2)
-    mat = mat[,2:1] #change order
-    
-    # spatial coordinate
-    ccc = mvrnorm(n[1], mu = c(coordinate[1],coordinate[2]), Sigma=diag(0.1, 2,2))
-    ccc2 = mvrnorm(n[2], mu = c(coordinate[3],coordinate[4]), Sigma=diag(0.1, 2,2))
-    ccc.o1 = mvrnorm(n[3]/2, mu = c(coordinate[1],coordinate[2]), Sigma=diag(0.1, 2,2))
-    ccc.o2 = mvrnorm(n[3]/2, mu = c(coordinate[3],coordinate[4]), Sigma=diag(0.1, 2,2))
-    ccc.n1 = rbind(ccc[1:35,], ccc2[36:40,])
-    ccc.n2 = rbind(ccc2[1:35,], ccc[36:40,])
-    xy = rbind(ccc.n1, ccc.n2,ccc.o1, ccc.o2)
-  }
-  
-  ccc = mvrnorm(n[1], mu = c(coordinate[1],coordinate[2]), Sigma=diag(0.1, 2,2))
-  ccc2 = mvrnorm(n[2], mu = c(coordinate[3],coordinate[4]), Sigma=diag(0.5, 2,2))
-  xy = rbind(ccc,ccc2)
-  plot(xy)
-  
-  return(list(mat=mat, xy=xy, cl=cl, beta=beta))
-}
+# simulateData_outlier_shape <- function(sh='circle', n=c(40,40,20), beta=c(1.5,-1.5), sigma=0.05, 
+#                                      coordinate=c(1,1,-1,-1) 
+# )
+# {
+#   if(sh == 'circle'){
+#     cl = c(rep(1,35), rep(4, 5), 
+#            rep(2,35), rep(5, 5), 
+#            rep(3, 20))
+
+#     
+#     mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
+#     colnames(mat) = c('y','x')
+#     loca1 = 1:40;  loca2 = 41:80;  loca3 = 81:100
+#     mat[loca1,1] = beta[1] * mat[loca1,2] + rnorm(40,0,sigma)
+#     mat[loca2,1] = beta[2] * mat[loca2,2] + rnorm(40,0,sigma)
+#     mat[loca3,1] = simu_outlier(mat[loca3, 2], beta, distOut=2)
+#     mat = mat[,2:1] #change order
+#     
+#     # spatial coordinate
+#     ccc = mvrnorm(n[1], mu = c(coordinate[1],coordinate[2]), Sigma=diag(0.1, 2,2))
+#     ccc2 = mvrnorm(n[2], mu = c(coordinate[3],coordinate[4]), Sigma=diag(0.1, 2,2))
+#     ccc.o1 = mvrnorm(n[3]/2, mu = c(coordinate[1],coordinate[2]), Sigma=diag(0.1, 2,2))
+#     ccc.o2 = mvrnorm(n[3]/2, mu = c(coordinate[3],coordinate[4]), Sigma=diag(0.1, 2,2))
+#     ccc.n1 = rbind(ccc[1:35,], ccc2[36:40,])
+#     ccc.n2 = rbind(ccc2[1:35,], ccc[36:40,])
+#     xy = rbind(ccc.n1, ccc.n2,ccc.o1, ccc.o2)
+#   }
+#   
+#   ccc = mvrnorm(n[1], mu = c(coordinate[1],coordinate[2]), Sigma=diag(0.1, 2,2))
+#   ccc2 = mvrnorm(n[2], mu = c(coordinate[3],coordinate[4]), Sigma=diag(0.5, 2,2))
+#   xy = rbind(ccc,ccc2)
+#   plot(xy)
+#   
+#   return(list(mat=mat, xy=xy, cl=cl, beta=beta))
+# }
 
 
 library('NonNorMvtDist')
@@ -413,6 +454,9 @@ simulateData_outlier_shape <- function(sh='gaus', n=c(40,40,20), beta=c(1.5,-1.5
     cl = c(rep(1,35), rep(4, 5), 
            rep(2,35), rep(5, 5), 
            rep(3, 20))
+    cl_new = c(rep(1,35), rep(-4, 5), 
+               rep(2,35), rep(-5, 5), 
+               rep(-3, 20))
     
     mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
     colnames(mat) = c('y','x')
@@ -464,6 +508,9 @@ simulateData_outlier_shape <- function(sh='gaus', n=c(40,40,20), beta=c(1.5,-1.5
     cl = c(rep(1,35), rep(4, 5), 
            rep(2,35), rep(5, 5), 
            rep(3, 20))
+    cl_new = c(rep(1,35), rep(-4, 5), 
+               rep(2,35), rep(-5, 5), 
+               rep(-3, 20))
     
     mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
     colnames(mat) = c('y','x')
@@ -483,7 +530,7 @@ simulateData_outlier_shape <- function(sh='gaus', n=c(40,40,20), beta=c(1.5,-1.5
     xy = rbind(ccc.n1, ccc.n2,ccc.o1, ccc.o2)
   }
 
-  return(list(mat=mat, xy=xy, cl=cl, beta=beta))
+  return(list(mat=mat, xy=xy, cl=cl, cl_new=cl_new, beta=beta))
 }
 
 
@@ -494,6 +541,9 @@ simulateData_outlier_spaRadius <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigm
   cl = c(rep(1,35), rep(4, 5), 
          rep(2,35), rep(5, 5), 
          rep(3, 20))
+  cl_new = c(rep(1,35), rep(-4, 5), 
+             rep(2,35), rep(-5, 5), 
+             rep(-3, 20))
   
   mat = matrix(runif(sum(n)*2,-2,2), sum(n), 2)
   colnames(mat) = c('y','x')
@@ -512,5 +562,5 @@ simulateData_outlier_spaRadius <- function(n=c(40,40,20), beta=c(1.5,-1.5), sigm
   ccc.n2 = rbind(ccc2[1:35,], ccc[36:40,])
   xy = rbind(ccc.n1, ccc.n2,ccc.o1, ccc.o2)
   
-  return(list(mat=mat, xy=xy, cl=cl, beta=beta))
+  return(list(mat=mat, xy=xy, cl=cl, cl_new=cl_new, beta=beta))
 }

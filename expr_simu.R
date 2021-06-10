@@ -41,7 +41,7 @@ for(i in 1:100){
   group_3[[i]] = dat_simu1
 }
 simu_n = list(group_1, group_2, group_3)
-names(simu_n) = c('n=100', 'n=500', 'n=1000')
+names(simu_n) = c('n=100', 'n=200', 'n=400')
 
 
 #----K-----
